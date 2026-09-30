@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 112" role="img" aria-labelledby="title desc">
+<title id="title">PLC-lang · RuSTy #1939 — Closed · 未合并</title>
+<desc id="desc">为使用编译器内部前缀的类型名增加警告。状态核对于 2026-09-30。</desc>
+<rect x="11" y="11" width="879" height="91" fill="#91b8a9"/>
+<rect x="5" y="5" width="879" height="91" fill="#18221d" stroke="#91b8a9" stroke-width="3"/>
+<text x="26" y="43" font-size="27" fill="#dcebe4" font-family="DejaVu Sans,Arial,Microsoft YaHei,PingFang SC,Noto Sans CJK SC,sans-serif" font-weight="700">PLC-lang · RuSTy #1939 ↗</text>
+<text x="26" y="80" font-size="22" fill="#acbdb4" font-family="DejaVu Sans,Arial,Microsoft YaHei,PingFang SC,Noto Sans CJK SC,sans-serif">为使用编译器内部前缀的类型名增加警告</text>
+<rect x="674" y="21" width="182" height="31" fill="#303b36"/>
+<text x="686" y="43" font-size="16" fill="#c1cec7" font-family="DejaVu Sans,Arial,Microsoft YaHei,PingFang SC,Noto Sans CJK SC,sans-serif">Closed · 未合并</text>
+</svg>

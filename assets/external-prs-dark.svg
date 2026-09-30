@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 100" role="img" aria-labelledby="title desc">
+<title id="title">全部外部 PR</title>
+<desc id="desc">View upstream pull requests</desc>
+<rect x="11" y="11" width="419" height="79" fill="#91b8a9"/>
+<rect x="5" y="5" width="419" height="79" fill="#18221d" stroke="#91b8a9" stroke-width="3"/>
+<text x="26" y="44" font-size="24" fill="#dcebe4" font-family="DejaVu Sans,Arial,Microsoft YaHei,PingFang SC,Noto Sans CJK SC,sans-serif" font-weight="700">全部外部 PR ↗</text>
+<text x="26" y="75" font-size="16" fill="#acbdb4" font-family="DejaVu Sans,Arial,Microsoft YaHei,PingFang SC,Noto Sans CJK SC,sans-serif">View upstream pull requests</text>
+</svg>
