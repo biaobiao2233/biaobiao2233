@@ -67,51 +67,52 @@ def frame(w, h, t, accent_bar=False):
 
 
 # ---------------------------------------------------------------- banner
-def ladder(t, x0=636, y0=46, y1=248):
-    """Decorative TIA Portal online-monitoring ladder: sealed-in motor + interlocked feed."""
-    a, wcol, m = t["accent"], t["wire"], t["muted"]
-    out = [f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y1}" stroke="{a}" stroke-width="3" stroke-linecap="round"/>']
+def ladder(t, x0=632, x_end=860):
+    """TIA Portal style ladder: Network 1 seal-in (%I0.0/%M0.0/%I0.1->%M0.0) + Network 2 (%M0.0->%Q0.0)."""
+    a, ln, m = t["accent"], t["text"], t["muted"]
 
-    def no(cx, cy, col):
-        return (f'<line x1="{cx-6}" y1="{cy-10}" x2="{cx-6}" y2="{cy+10}" stroke="{col}" stroke-width="2.2" stroke-linecap="round"/>'
-                f'<line x1="{cx+6}" y1="{cy-10}" x2="{cx+6}" y2="{cy+10}" stroke="{col}" stroke-width="2.2" stroke-linecap="round"/>')
+    def rail(y0, y1):
+        return f'<line x1="{x0}" y1="{y0}" x2="{x0}" y2="{y1}" stroke="{ln}" stroke-width="2.4" stroke-linecap="butt"/>'
 
-    def coil(cx, cy, col):
-        return (f'<path d="M{cx-4},{cy-11} A12,12 0 0,0 {cx-4},{cy+11}" fill="none" stroke="{col}" stroke-width="2.2" stroke-linecap="round"/>'
-                f'<path d="M{cx+4},{cy-11} A12,12 0 0,1 {cx+4},{cy+11}" fill="none" stroke="{col}" stroke-width="2.2" stroke-linecap="round"/>')
+    def contact(cx, cy, nc=False):
+        g = (f'<line x1="{cx-6}" y1="{cy-10}" x2="{cx-6}" y2="{cy+10}" stroke="{ln}" stroke-width="2" stroke-linecap="round"/>'
+             f'<line x1="{cx+6}" y1="{cy-10}" x2="{cx+6}" y2="{cy+10}" stroke="{ln}" stroke-width="2" stroke-linecap="round"/>')
+        if nc:
+            g += f'<line x1="{cx-5}" y1="{cy+8}" x2="{cx+5}" y2="{cy-8}" stroke="{ln}" stroke-width="1.8" stroke-linecap="round"/>'
+        return g
 
-    def wire(xa, ya, xb, yb, col):
-        return f'<line x1="{xa}" y1="{ya}" x2="{xb}" y2="{yb}" stroke="{col}" stroke-width="2.2" stroke-linecap="round"/>'
+    def coil(cx, cy):
+        return (f'<path d="M{cx-4},{cy-11} A12,12 0 0,0 {cx-4},{cy+11}" fill="none" stroke="{ln}" stroke-width="2" stroke-linecap="round"/>'
+                f'<path d="M{cx+4},{cy-11} A12,12 0 0,1 {cx+4},{cy+11}" fill="none" stroke="{ln}" stroke-width="2" stroke-linecap="round"/>'
+                f'<line x1="{cx+11.2}" y1="{cy}" x2="{x_end}" y2="{cy}" stroke="{ln}" stroke-width="2" stroke-linecap="butt"/>'
+                f'<line x1="{x_end}" y1="{cy-3}" x2="{x_end}" y2="{cy+3}" stroke="{ln}" stroke-width="2" stroke-linecap="butt"/>')
 
-    def lab(cx, cy, s1, s2):
-        return (text(cx, cy - 27, s1, 11, t["text"], 600, MONO, anchor="middle")
-                + text(cx, cy - 15, s2, 10, m, family=MONO, anchor="middle"))
+    def wire(xa, ya, xb, yb):
+        return f'<line x1="{xa}" y1="{ya}" x2="{xb}" y2="{yb}" stroke="{ln}" stroke-width="2" stroke-linecap="round"/>'
 
-    c1, c2, c3 = 696, 766, 838
-    xb1, xb2 = 666, 726
+    def lab(cx, cy, addr, sym):
+        return (text(cx, cy - 27, addr, 10.5, a, 700, MONO, anchor="middle")
+                + text(cx, cy - 15, sym, 10, m, 400, MONO, anchor="middle"))
 
-    # Rung 1: Start/stop seal-in (I0.0 released, Q0.0 sealed in, I0.1 external-NC STOP = 1 -> Q0.0 energized)
-    r1, br = y0 + 50, y0 + 94
-    out += [
-        wire(x0, r1, xb1, r1, a),
-        # Upper branch: I0.0 released (energized up to left plate, open after)
-        wire(xb1, r1, c1 - 6, r1, a), no(c1, r1, wcol), wire(c1 + 6, r1, xb2, r1, wcol),
-        # Lower seal-in branch: Q0.0 closed & carrying power
-        wire(xb1, r1, xb1, br, a), wire(xb1, br, c1 - 6, br, a), no(c1, br, a),
-        wire(c1 + 6, br, xb2, br, a), wire(xb2, br, xb2, r1, a),
-        # STOP (NO in PLC for external NC button) -> MOTOR coil
-        wire(xb2, r1, c2 - 6, r1, a), no(c2, r1, a), wire(c2 + 6, r1, c3 - 11.2, r1, a),
-        coil(c3, r1, a),
-        lab(c1, r1, "I0.0", "START"), lab(c2, r1, "I0.1", "STOP"), lab(c3, r1, "Q0.0", "MOTOR"),
-        text(c1, br + 25, "Q0.0", 11, t["text"], 600, MONO, anchor="middle"),
+    c1, xb, c2, c3 = 678, 714, 750, 836
+
+    # Network 1: %I0.0 || %M0.0 -> %I0.1 (NC) -> %M0.0 coil
+    r1, br = 76, 152
+    out = [
+        rail(36, 174),
+        wire(x0, r1, c1 - 6, r1), contact(c1, r1), wire(c1 + 6, r1, c2 - 6, r1),
+        wire(x0, br, c1 - 6, br), contact(c1, br), wire(c1 + 6, br, xb, br), wire(xb, br, xb, r1),
+        contact(c2, r1, nc=True), wire(c2 + 6, r1, c3 - 11.2, r1), coil(c3, r1),
+        lab(c1, r1, "%I0.0", '"I0.0"'), lab(c2, r1, "%I0.1", '"I0.1"'), lab(c3, r1, "%M0.0", '"M0.0"'),
+        lab(c1, br, "%M0.0", '"M0.0"'),
     ]
 
-    # Rung 2: Interlocked feed (Q0.0 closed -> power waits at open I0.2 SENSOR -> Q0.1 FEED idle)
-    r2 = y1 - 20
+    # Network 2: %M0.0 -> %Q0.0 coil
+    r2 = 238
     out += [
-        wire(x0, r2, c1 - 6, r2, a), no(c1, r2, a), wire(c1 + 6, r2, c2 - 6, r2, a),
-        no(c2, r2, wcol), wire(c2 + 6, r2, c3 - 11.2, r2, wcol), coil(c3, r2, wcol),
-        lab(c1, r2, "Q0.0", "MOTOR"), lab(c2, r2, "I0.2", "SENSOR"), lab(c3, r2, "Q0.1", "FEED"),
+        rail(198, 262),
+        wire(x0, r2, c1 - 6, r2), contact(c1, r2), wire(c1 + 6, r2, c3 - 11.2, r2), coil(c3, r2),
+        lab(c1, r2, "%M0.0", '"M0.0"'), lab(c3, r2, "%Q0.0", '"Q0.0"'),
     ]
     return "".join(out)
 
